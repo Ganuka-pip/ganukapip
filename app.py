@@ -250,7 +250,7 @@ def scan_signals():
         confirms = df[bool_feats].tail(1).values.flatten().sum()
         conf_pc = (confirms / len(bool_feats)) * 100
 
-        if conf_pc <90:
+        if conf_pc < 90:
             continue
 
         risk_unit = abs(ep - sl)
