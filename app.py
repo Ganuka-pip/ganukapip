@@ -16,7 +16,7 @@ import telegram
 
 # Streamlit Config
 st.set_page_config(page_title="Ultimate Binance AI Bot", layout="wide")
-st.title("CRYPTO VISION AI කරුණාකර රැදී සිදීමට කාරුණික වන්න...සැ:යු - 90% වැඩි WIn rate එකක් පමනක් ඔබට මෙහි දිස් වේ")
+st.title("CRYPTO VISION AI කරුණාකර රැදී සිදීමට කාරුණික වන්න...සැ:යු - 90% වැඩි WIn rate Signal පමනක් ඔබට මෙහි දිස් වේ")
 # ✅ Background Photo CSS Inject
 page_bg_img = '''
 <style>
