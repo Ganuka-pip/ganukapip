@@ -147,8 +147,13 @@ model, scaler, trend_1h = None, None, None
 
 def train_model():
     global model, scaler, trend_1h
-    df_1h = fetch_binance_data(SYMBOLS[0],'1h',LIMIT)
+    df_1h = fetch_binance_data(SYMBOLS[0], '1h', LIMIT)
     df_1h = apply_theories(df_1h)
+
+    if df_1h.empty:
+        st.error("⚠️ Error: No 1h data fetched. Cannot train model.")
+        return
+
     trend_1h = df_1h['Trend'].iloc[-1]
 
     df = fetch_binance_data(SYMBOLS[0], INTERVAL, LIMIT)
@@ -164,10 +169,11 @@ def train_model():
     scaler = StandardScaler().fit(Xt)
     Xt_s, Xv_s = scaler.transform(Xt), scaler.transform(Xv)
 
-    grid = {'max_depth': [3,4], 'learning_rate': [0.05,0.1], 'n_estimators': [100,200]}
+    grid = {'max_depth': [3, 4], 'learning_rate': [0.05, 0.1], 'n_estimators': [100, 200]}
     gs = GridSearchCV(XGBClassifier(), grid, cv=3)
     gs.fit(Xt_s, yt)
     model = gs.best_estimator_
+
 
 train_model()
 
