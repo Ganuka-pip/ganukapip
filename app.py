@@ -16,7 +16,7 @@ import telegram
 
 # Streamlit Config
 st.set_page_config(page_title="Ultimate Binance AI Bot", layout="wide")
-st.title("CRYPTO VISION AI කරුණාකර රැදී සිදීමට කාරුණික වන්න...සැ:යු - 90% වැඩි WIn rate Signal පමනක් ඔබට මෙහි දිස් වේ")
+st.title("Ultimate Binance AI Real-Time Signal Bot - Ultra Pro Max")
 # ✅ Background Photo CSS Inject
 page_bg_img = '''
 <style>
@@ -50,22 +50,33 @@ if col2.button('🔁 Toggle Auto Scan'):
 # Constants
 BINANCE_API = 'https://api.binance.com/api/v3/klines'
 SYMBOLS = [
-    'BTCUSDT', 'ETHUSDT', 'BNBUSDT', 'SOLUSDT', 'XRPUSDT',
-    'DOGEUSDT', 'ADAUSDT', 'AVAXUSDT', 'TRXUSDT', 'LINKUSDT',
-    'MATICUSDT', 'LTCUSDT', 'DOTUSDT', 'SHIBUSDT', 'BCHUSDT',
-    'ATOMUSDT', 'XLMUSDT', 'ETCUSDT', 'ICPUSDT', 'FILUSDT',
-    'APTUSDT', 'SUIUSDT', 'ARBUSDT', 'NEARUSDT', 'LDOUSDT',
-    'INJUSDT', 'GRTUSDT', 'OPUSDT', 'VETUSDT', 'EGLDUSDT',
-    'FTMUSDT', 'RUNEUSDT', 'AAVEUSDT', 'SANDUSDT', 'MKRUSDT',
-    'RNDRUSDT', 'COTIUSDT', 'DYDXUSDT', 'STXUSDT', 'FLOWUSDT',
-    'GMTUSDT', 'IMXUSDT', 'ZILUSDT', 'CHRUSDT', 'COMPUSDT',
-    'ENSUSDT', 'SNXUSDT', 'CAKEUSDT', '1INCHUSDT', 'KAVAUSDT'
+    'BTCUSDT', 'ETHUSDT', 'BNBUSDT', 'SOLUSDT', 'XRPUSDT', 'DOGEUSDT', 'ADAUSDT', 'AVAXUSDT', 'DOTUSDT', 'TRXUSDT',
+    'LINKUSDT', 'MATICUSDT', 'LTCUSDT', 'BCHUSDT', 'SHIBUSDT', 'ATOMUSDT', 'XLMUSDT', 'ETCUSDT', 'XMRUSDT', 'ICPUSDT',
+    'FILUSDT', 'APTUSDT', 'HBARUSDT', 'NEARUSDT', 'VETUSDT', 'LDOUSDT', 'ARBUSDT', 'QNTUSDT', 'CROUSDT', 'GRTUSDT',
+    'ALGOUSDT', 'AAVEUSDT', 'EGLDUSDT', 'SANDUSDT', 'MANAUSDT', 'THETAUSDT', 'XTZUSDT', 'AXSUSDT', 'IMXUSDT', 'RUNEUSDT',
+    'EOSUSDT', 'KLAYUSDT', 'FLOWUSDT', 'ZECUSDT', 'GALAUSDT', 'SUIUSDT', 'STXUSDT', 'FTMUSDT', 'SNXUSDT', 'BSVUSDT',
+    'CRVUSDT', 'INJUSDT', 'CAKEUSDT', 'COMPUSDT', 'XECUSDT', 'MIOTAUSDT', 'KAVAUSDT', 'DYDXUSDT', 'MINAUSDT', 'WAVESUSDT',
+    'ENJUSDT', '1INCHUSDT', 'BTTCUSDT', 'LRCUSDT', 'GMTUSDT', 'BICOUSDT', 'MASKUSDT', 'YFIUSDT', 'BANDUSDT', 'DASHUSDT',
+    'ZILUSDT', 'ENSUSDT', 'SKLUSDT', 'ROSEUSDT', 'CELRUSDT', 'HOTUSDT', 'ANTUSDT', 'OMGUSDT', 'BALUSDT', 'BLURUSDT',
+    'FETUSDT', 'CKBUSDT', 'GLMRUSDT', 'COTIUSDT', 'RLCUSDT', 'WOOUSDT', 'SFPUSDT', 'XEMUSDT', 'OPUSDT', 'TWTUSDT',
+    'ICXUSDT', 'KSMUSDT', 'OCEANUSDT', 'HNTUSDT', 'STMXUSDT', 'ANKRUSDT', 'ZENUSDT', 'RSRUSDT', 'LSKUSDT', 'PEPEUSDT',
+    'LUNCUSDT', 'TUSDT', 'SSVUSDT', 'FXSUSDT', 'JOEUSDT', 'MAGICUSDT', 'GMXUSDT', 'APTUSDT', 'NKNUSDT', 'ACHUSDT',
+    'IDUSDT', 'JOEUSDT', 'C98USDT', 'DODOUSDT', 'LPTUSDT', 'BNTUSDT', 'API3USDT', 'REEFUSDT', 'NMRUSDT', 'ALICEUSDT',
+    'RAYUSDT', 'DENTUSDT', 'BAKEUSDT', 'FORTHUSDT', 'STGUSDT', 'RADUSDT', 'PERPUSDT', 'MTLUSDT', 'PYRUSDT', 'CTSIUSDT',
+    'SUSHIUSDT', 'VTHOUSDT', 'GLMUSDT', 'VITEUSDT', 'OGNUSDT', 'SPELLUSDT', 'FLMUSDT', 'DARUSDT', 'ILVUSDT', 'PLAUSDT',
+    'LITUSDT', 'QUICKUSDT', 'DEXEUSDT', 'UNFIUSDT', 'POWRUSDT', 'STPTUSDT', 'ONGUSDT', 'BTSUSDT', 'ALPHAUSDT', 'CHRUSDT',
+    'CTKUSDT', 'FIDAUSDT', 'ORNUSDT', 'MDTUSDT', 'XNOUSDT', 'BONDUSDT', 'MLNUSDT', 'XVSUSDT', 'PUNDIXUSDT', 'SYSUSDT',
+    'TRBUSDT', 'UTKUSDT', 'ASTRUSDT', 'MOVRUSDT', 'AUCTIONUSDT', 'PHAUSDT', 'BETAUSDT', 'PSGUSDT', 'CITYUSDT', 'PORTOUSDT',
+    'SANTOSUSDT', 'OGUSDT', 'JUVUSDT', 'ATMUSDT', 'LAZIOUSDT', 'BARUSDT', 'VOXELUSDT', 'HIGHUSDT', 'CTXCUSDT', 'TLMUSDT',
+    'SUPERUSDT', 'POLSUSDT', 'AUDIOUSDT', 'ERNUSDT', 'BICOUSDT', 'HOOKUSDT', 'IDEXUSDT', 'RAREUSDT', 'LEVERUSDT', 'MDXUSDT',
+    'FRONTUSDT', 'QKCUSDT', 'SUNUSDT', 'ACAUSDT', 'RIFUSDT', 'YGGUSDT', 'TRUUSDT', 'ASTUSDT', 'DATAUSDT', 'DEGOUSDT',
+    'MBOXUSDT', 'CELOUSDT', 'DREPUSDT', 'PONDUSDT', 'TROYUSDT', 'FLOKIUSDT', 'KDAUSDT', 'XVGUSDT', 'ALPACAUSDT', 'ADXUSDT',
+    'AMBUSDT', 'BTSUSDT', 'GNOUSDT', 'IRISUSDT', 'MDTUSDT', 'PHBUSDT', 'QIUSDT', 'STMXUSDT', 'TCTUSDT', 'WTCUSDT', 'WINGUSDT',
+    'XVGUSDT', 'YFIIUSDT', 'ZRXUSDT', 'AKROUSDT', 'BUSDUSDT', 'USDCUSDT', 'FDUSDUSDT', 'TUSDUSDT'
 ]
 
-
-
-INTERVAL = '15m'
-LIMIT = 300
+INTERVAL = '1h'
+LIMIT = 500
 TOKEN = 'YOUR_TELEGRAM_BOT_TOKEN'
 CHAT_ID = 'YOUR_TELEGRAM_CHAT_ID'
 bot = telegram.Bot(token=TOKEN)
@@ -84,29 +95,15 @@ feature_list = [
 # Fetch Binance Data
 def fetch_binance_data(symbol, interval, limit):
     params = {'symbol': symbol, 'interval': interval, 'limit': limit}
-    res = requests.get(BINANCE_API, params=params)
-
-    if res.status_code != 200:
-        st.error(f"⚠️ Binance API Error: {res.status_code}")
-        return pd.DataFrame()
-
-    data = pd.DataFrame(res.json(), columns=[
-        'open_time','open','high','low','close','volume',
-        'close_time','quote_asset_volume','trades',
-        'taker_buy_volume','taker_buy_quote_volume','ignore'
-    ])
-
+    data = pd.DataFrame(requests.get(BINANCE_API, params=params).json(),
+                        columns=['open_time','open','high','low','close','volume',
+                                 'close_time','quote_asset_volume','trades',
+                                 'taker_buy_volume','taker_buy_quote_volume','ignore'])
     for col in ['open','high','low','close','volume','taker_buy_volume']:
         data[col] = data[col].astype(float)
-
     data['dt'] = pd.to_datetime(data['close_time'], unit='ms')
     data['session'] = data['dt'].dt.tz_localize('UTC').dt.tz_convert(tz('Asia/Colombo')).dt.hour
-
-    if data.empty:
-        st.error(f"⚠️ No data fetched for {symbol} {interval}!")
-    
     return data
-
 
 # Apply Theories
 def apply_theories(df):
@@ -150,13 +147,8 @@ model, scaler, trend_1h = None, None, None
 
 def train_model():
     global model, scaler, trend_1h
-    df_1h = fetch_binance_data(SYMBOLS[0], '1h', LIMIT)
+    df_1h = fetch_binance_data(SYMBOLS[0],'1h',LIMIT)
     df_1h = apply_theories(df_1h)
-
-    if df_1h.empty:
-        st.error("⚠️ Error: No 1h data fetched. Cannot train model.")
-        return
-
     trend_1h = df_1h['Trend'].iloc[-1]
 
     df = fetch_binance_data(SYMBOLS[0], INTERVAL, LIMIT)
@@ -172,17 +164,16 @@ def train_model():
     scaler = StandardScaler().fit(Xt)
     Xt_s, Xv_s = scaler.transform(Xt), scaler.transform(Xv)
 
-    grid = {'max_depth': [3, 4], 'learning_rate': [0.05, 0.1], 'n_estimators': [100, 200]}
+    grid = {'max_depth': [3,4], 'learning_rate': [0.05,0.1], 'n_estimators': [100,200]}
     gs = GridSearchCV(XGBClassifier(), grid, cv=3)
     gs.fit(Xt_s, yt)
     model = gs.best_estimator_
-
 
 train_model()
 
 # Signal Scanner
 def scan_signals():
-    st.write("### ටිකක් ඉන්න ආස හිතෙයි")
+    st.write("### Live Ultra Pro Max Signals for Multiple Symbols:")
     bool_feats = ['Orderblock','Breaker','Mitigation','FVG','Session_Smart','MTF_Confirm','Choch','RSI_Div','HVN']
     for sym in SYMBOLS:
         df = fetch_binance_data(sym,INTERVAL,LIMIT)
@@ -203,11 +194,11 @@ def scan_signals():
         sig = 'BUY' if pred==1 else 'SELL'
         confirms = df[bool_feats].tail(1).values.flatten().sum()
         conf_pc = (confirms/len(bool_feats))*100
-        if conf_pc < 3:
+        if conf_pc < 90:
             #st.warning(f"⚠️ Skipping {sym} – Confidence only {conf_pc:.1f}%")
             continue
         risk_unit = abs(ep-sl)
-        mult = 2.5 if conf_pc>=3 else 2.0 if conf_pc>=3 else 1.5
+        mult = 2.5 if conf_pc>=90 else 2.0 if conf_pc>=70 else 1.5
         tp = ep + risk_unit*mult
         out = {"Symbol":sym, "Signal":sig, "Confidence%":f"{conf_pc:.1f}%", "Entry":ep, "SL":sl, "TP":tp, "Size":f"{pos_size:.2f} units"}
         st.write(pd.DataFrame([out]))
@@ -228,6 +219,6 @@ if st.session_state.get("scan_now") or st.session_state.auto_scan:
     scan_signals()
     st.session_state.scan_now = False
     if st.session_state.auto_scan:
-        time.sleep(360)
+        time.sleep(3600)
         st.experimental_rerun()
 
