@@ -49,7 +49,19 @@ if col2.button('🔁 Toggle Auto Scan'):
 
 # Constants
 BINANCE_API = 'https://api.binance.com/api/v3/klines'
-SYMBOLS = ['BTCUSDT', 'ETHUSDT', 'BNBUSDT', 'SOLUSDT', 'XRPUSDT']
+SYMBOLS = [
+    'BTCUSDT', 'ETHUSDT', 'BNBUSDT', 'SOLUSDT', 'XRPUSDT',
+    'DOGEUSDT', 'ADAUSDT', 'AVAXUSDT', 'TRXUSDT', 'LINKUSDT',
+    'MATICUSDT', 'LTCUSDT', 'DOTUSDT', 'SHIBUSDT', 'BCHUSDT',
+    'ATOMUSDT', 'XLMUSDT', 'ETCUSDT', 'ICPUSDT', 'FILUSDT',
+    'APTUSDT', 'SUIUSDT', 'ARBUSDT', 'NEARUSDT', 'LDOUSDT',
+    'INJUSDT', 'GRTUSDT', 'OPUSDT', 'VETUSDT', 'EGLDUSDT',
+    'FTMUSDT', 'RUNEUSDT', 'AAVEUSDT', 'SANDUSDT', 'MKRUSDT',
+    'RNDRUSDT', 'COTIUSDT', 'DYDXUSDT', 'STXUSDT', 'FLOWUSDT',
+    'GMTUSDT', 'IMXUSDT', 'ZILUSDT', 'CHRUSDT', 'COMPUSDT',
+    'ENSUSDT', 'SNXUSDT', 'CAKEUSDT', '1INCHUSDT', 'KAVAUSDT'
+]
+
 
 
 INTERVAL = '15m'
@@ -177,7 +189,7 @@ def scan_signals():
         sig = 'BUY' if pred==1 else 'SELL'
         confirms = df[bool_feats].tail(1).values.flatten().sum()
         conf_pc = (confirms/len(bool_feats))*100
-        if conf_pc < 90:
+        if conf_pc < 20:
             #st.warning(f"⚠️ Skipping {sym} – Confidence only {conf_pc:.1f}%")
             continue
         risk_unit = abs(ep-sl)
