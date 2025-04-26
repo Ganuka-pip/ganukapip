@@ -148,33 +148,60 @@ model, scaler, trend_1h = None, None, None
 def train_model():
     global model, scaler, trend_1h
 
+    # Fetch 1h timeframe data
     df_1h = fetch_binance_data(SYMBOLS[0], '1h', LIMIT)
-    df_1h = apply_theories(df_1h)
-
-    # ✅ දැන් empty check එක
     if df_1h.empty:
-        st.error("⚠️ Error: No 1h data fetched. Cannot train model.")
+        st.warning("⚠️ No 1h data fetched. Skipping model training.")
+        model = None
+        scaler = None
+        trend_1h = None
+        return
+
+    df_1h = apply_theories(df_1h)
+    if df_1h.empty:
+        st.warning("⚠️ No 1h data after applying theories. Skipping model training.")
+        model = None
+        scaler = None
+        trend_1h = None
         return
 
     trend_1h = df_1h['Trend'].iloc[-1]
 
+    # Fetch main interval data
     df = fetch_binance_data(SYMBOLS[0], INTERVAL, LIMIT)
-    df = apply_theories(df)
-
     if df.empty:
-        st.error("⚠️ Error: No main interval data fetched. Cannot proceed.")
+        st.warning("⚠️ No main data fetched. Skipping model training.")
+        model = None
+        scaler = None
         return
 
+    df = apply_theories(df)
     df = df.dropna()
+
+    if df.empty:
+        st.warning("⚠️ No data after theories. Skipping model training.")
+        model = None
+        scaler = None
+        return
+
     df['TF_1h_Trend'] = trend_1h
     df['MTF_Confirm'] = (df['Trend'] == df['TF_1h_Trend']).astype(int)
 
     X = df[feature_list]
-    y = np.where((df['close'].shift(-1) < df['close']) & 
-                 (df['close'].shift(-2) < df['close']) & 
-                 (df['close'].shift(-3) < df['close']), 0, 1)
+    y = np.where(
+        (df['close'].shift(-1) < df['close']) & 
+        (df['close'].shift(-2) < df['close']) & 
+        (df['close'].shift(-3) < df['close']),
+        0, 1
+    )
 
     X, y = X.iloc[:-3], y[:-3]
+
+    if len(X) < 10:
+        st.warning("⚠️ Not enough data to train the model. Skipping.")
+        model = None
+        scaler = None
+        return
 
     Xt, Xv, yt, yv = train_test_split(X, y, test_size=0.2, random_state=42)
 
@@ -184,10 +211,9 @@ def train_model():
     grid = {'max_depth': [3, 4], 'learning_rate': [0.05, 0.1], 'n_estimators': [100, 200]}
     gs = GridSearchCV(XGBClassifier(), grid, cv=3)
     gs.fit(Xt_s, yt)
+
     model = gs.best_estimator_
-
-
-train_model()
+    st.success("✅ Model trained successfully!")
 
 # Signal Scanner
 def scan_signals():
