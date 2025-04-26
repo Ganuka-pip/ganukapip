@@ -16,7 +16,8 @@ import telegram
 
 # Streamlit Config
 st.set_page_config(page_title="Ultimate Binance AI Bot", layout="wide")
-st.title("Ultimate Binance AI Real-Time Signal Bot - Ultra Pro Max")
+st.title("Ultimate Binance AI Real-Time Signal Bot - Ultra Pro Max කරුණාකර රැදී සිදීමට කාරුණික වන්න...ටිකක් ඉන්න ආස හිතෙයි
+(සැ:යු - වැඩි එකක් පමනක් ඔබට මෙහි දිස් වේ)")
 # ✅ Background Photo CSS Inject
 page_bg_img = '''
 <style>
@@ -179,7 +180,7 @@ train_model()
 
 # Signal Scanner
 def scan_signals():
-    st.write("### Live Ultra Pro Max Signals for Multiple Symbols:")
+    st.write("### ටිකක් ඉන්න ආස හිතෙයි")
     bool_feats = ['Orderblock','Breaker','Mitigation','FVG','Session_Smart','MTF_Confirm','Choch','RSI_Div','HVN']
     for sym in SYMBOLS:
         df = fetch_binance_data(sym,INTERVAL,LIMIT)
