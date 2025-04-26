@@ -1,0 +1,9 @@
+numpy
+pandas
+requests
+matplotlib   
+scikit-learn
+xgboost
+streamlit
+pytz
+python-telegram-bot
