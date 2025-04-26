@@ -218,7 +218,7 @@ def train_model():
 # Signal Scanner
 def scan_signals():
     st.write("### Live Ultra Pro Max Signals for Multiple Symbols:")
-    bool_feats = ['Session_Smart','MTF_Confirm']
+    bool_feats = []
 
     for sym in SYMBOLS:
         df = fetch_binance_data(sym, INTERVAL, LIMIT)
