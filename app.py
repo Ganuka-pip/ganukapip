@@ -175,34 +175,49 @@ train_model()
 def scan_signals():
     st.write("### Live Ultra Pro Max Signals for Multiple Symbols:")
     bool_feats = ['Orderblock','Breaker','Mitigation','FVG','Session_Smart','MTF_Confirm','Choch','RSI_Div','HVN']
+
     for sym in SYMBOLS:
-        df = fetch_binance_data(sym,INTERVAL,LIMIT)
+        df = fetch_binance_data(sym, INTERVAL, LIMIT)
+        if df.empty:
+            st.warning(f"⚠️ {sym} - No data fetched. Skipping...")
+            continue
+
         df = apply_theories(df)
         if df.empty:
-            #st.warning(f"⚠️ {sym} - No data fetched. Skipping...")
+            st.warning(f"⚠️ {sym} - No data after applying theories. Skipping...")
             continue
-        
+
         df['TF_1h_Trend'] = trend_1h
-        df['MTF_Confirm'] = (df['Trend']==df['TF_1h_Trend']).astype(int)
+        df['MTF_Confirm'] = (df['Trend'] == df['TF_1h_Trend']).astype(int)
+
         Xl = df[feature_list].tail(1).fillna(0)
         sl = df['Fibo_Support'].iat[-1]
         ep = df['close'].iat[-1]
-        risk_amt = ACCOUNT_BALANCE*MAX_RISK_PER_TRADE
-        pos_size = risk_amt/abs(ep-sl)
+
+        if np.isnan(sl) or np.isnan(ep):
+            st.warning(f"⚠️ {sym} - SL or Entry price missing. Skipping...")
+            continue
+
+        risk_amt = ACCOUNT_BALANCE * MAX_RISK_PER_TRADE
+        pos_size = risk_amt / abs(ep - sl)
         scaled = scaler.transform(Xl)
         pred = model.predict(scaled)[-1]
-        sig = 'BUY' if pred==1 else 'SELL'
+        sig = 'BUY' if pred == 1 else 'SELL'
         confirms = df[bool_feats].tail(1).values.flatten().sum()
-        conf_pc = (confirms/len(bool_feats))*100
+        conf_pc = (confirms / len(bool_feats)) * 100
+
         if conf_pc < 90:
-            #st.warning(f"⚠️ Skipping {sym} – Confidence only {conf_pc:.1f}%")
             continue
-        risk_unit = abs(ep-sl)
-        mult = 2.5 if conf_pc>=90 else 2.0 if conf_pc>=70 else 1.5
-        tp = ep + risk_unit*mult
-        out = {"Symbol":sym, "Signal":sig, "Confidence%":f"{conf_pc:.1f}%", "Entry":ep, "SL":sl, "TP":tp, "Size":f"{pos_size:.2f} units"}
+
+        risk_unit = abs(ep - sl)
+        mult = 2.5 if conf_pc >= 90 else 2.0 if conf_pc >= 70 else 1.5
+        tp = ep + risk_unit * mult
+        out = {
+            "Symbol": sym, "Signal": sig, "Confidence%": f"{conf_pc:.1f}%", 
+            "Entry": ep, "SL": sl, "TP": tp, "Size": f"{pos_size:.2f} units"
+        }
         st.write(pd.DataFrame([out]))
-        bot.send_message(CHAT_ID, f"{sym} {sig} {conf_pc:.1f}% @{ep} SL{sl} TP{tp} Size{pos_size:.2f}")
+
 
         # 📊 Chart View
         fig, ax = plt.subplots()
