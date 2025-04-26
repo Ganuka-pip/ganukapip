@@ -189,11 +189,11 @@ def scan_signals():
         sig = 'BUY' if pred==1 else 'SELL'
         confirms = df[bool_feats].tail(1).values.flatten().sum()
         conf_pc = (confirms/len(bool_feats))*100
-        if conf_pc < 20:
+        if conf_pc < 3:
             #st.warning(f"⚠️ Skipping {sym} – Confidence only {conf_pc:.1f}%")
             continue
         risk_unit = abs(ep-sl)
-        mult = 2.5 if conf_pc>=90 else 2.0 if conf_pc>=70 else 1.5
+        mult = 2.5 if conf_pc>=3 else 2.0 if conf_pc>=3 else 1.5
         tp = ep + risk_unit*mult
         out = {"Symbol":sym, "Signal":sig, "Confidence%":f"{conf_pc:.1f}%", "Entry":ep, "SL":sl, "TP":tp, "Size":f"{pos_size:.2f} units"}
         st.write(pd.DataFrame([out]))
