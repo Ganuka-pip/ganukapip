@@ -84,15 +84,29 @@ feature_list = [
 # Fetch Binance Data
 def fetch_binance_data(symbol, interval, limit):
     params = {'symbol': symbol, 'interval': interval, 'limit': limit}
-    data = pd.DataFrame(requests.get(BINANCE_API, params=params).json(),
-                        columns=['open_time','open','high','low','close','volume',
-                                 'close_time','quote_asset_volume','trades',
-                                 'taker_buy_volume','taker_buy_quote_volume','ignore'])
+    res = requests.get(BINANCE_API, params=params)
+
+    if res.status_code != 200:
+        st.error(f"⚠️ Binance API Error: {res.status_code}")
+        return pd.DataFrame()
+
+    data = pd.DataFrame(res.json(), columns=[
+        'open_time','open','high','low','close','volume',
+        'close_time','quote_asset_volume','trades',
+        'taker_buy_volume','taker_buy_quote_volume','ignore'
+    ])
+
     for col in ['open','high','low','close','volume','taker_buy_volume']:
         data[col] = data[col].astype(float)
+
     data['dt'] = pd.to_datetime(data['close_time'], unit='ms')
     data['session'] = data['dt'].dt.tz_localize('UTC').dt.tz_convert(tz('Asia/Colombo')).dt.hour
+
+    if data.empty:
+        st.error(f"⚠️ No data fetched for {symbol} {interval}!")
+    
     return data
+
 
 # Apply Theories
 def apply_theories(df):
