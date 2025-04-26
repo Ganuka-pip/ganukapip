@@ -218,7 +218,7 @@ def train_model():
 # Signal Scanner
 def scan_signals():
     st.write("### Live Ultra Pro Max Signals for Multiple Symbols:")
-    bool_feats = []
+    bool_feats = ['Orderblock','Breaker','Mitigation','FVG','Session_Smart','MTF_Confirm','Choch','RSI_Div','HVN']
 
     for sym in SYMBOLS:
         df = fetch_binance_data(sym, INTERVAL, LIMIT)
@@ -250,7 +250,7 @@ def scan_signals():
         confirms = df[bool_feats].tail(1).values.flatten().sum()
         conf_pc = (confirms / len(bool_feats)) * 100
 
-        if conf_pc < 100:
+        if conf_pc < 90:
             continue
 
         risk_unit = abs(ep - sl)
