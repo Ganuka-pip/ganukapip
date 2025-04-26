@@ -1,7 +1,7 @@
 numpy
 pandas
 requests
-matplotlib   
+matplotlib     
 scikit-learn
 xgboost
 streamlit
