@@ -1,4 +1,6 @@
-# -- Imports (unchanged) --
+# ✅ Final Version: Auto-scan, Confidence Filter, Chart View - Fully Corrected
+
+# Core Imports
 import numpy as np
 import pandas as pd
 import requests
@@ -12,10 +14,10 @@ from xgboost import XGBClassifier
 import streamlit as st
 import telegram
 
-# -- Streamlit Config (unchanged) --
+# Streamlit Config
 st.set_page_config(page_title="Ultimate Binance AI Bot", layout="wide")
 st.title("Ultimate Binance AI Real-Time Signal Bot - Ultra Pro Max")
-
+# ✅ Background Photo CSS Inject
 page_bg_img = '''
 <style>
 .stApp {
@@ -27,15 +29,17 @@ header.css-18ni7ap.e8zbici2 {
 background-color: rgba(255, 0, 0, 0.8);
 }
 </style>
+
 '''
 st.markdown(page_bg_img, unsafe_allow_html=True)
 
-# -- Auto-Scan State Setup --
+# Auto-Scan State Setup
 if "auto_scan" not in st.session_state:
     st.session_state.auto_scan = False
 if "scan_now" not in st.session_state:
     st.session_state.scan_now = False
 
+# UI Buttons
 col1, col2 = st.columns(2)
 if col1.button('🔍 Scan Now'):
     st.session_state.scan_now = True
@@ -43,10 +47,33 @@ if col2.button('🔁 Toggle Auto Scan'):
     st.session_state.auto_scan = not st.session_state.auto_scan
     st.success(f"Auto Scan is now {'ON' if st.session_state.auto_scan else 'OFF'}")
 
-# -- Constants (unchanged except smaller SYMBOLS) --
-BINANCE_API = 'https://api.binance.us'
-
-SYMBOLS = ['BTCUSDT', 'ETHUSDT', 'BNBUSDT', 'SOLUSDT', 'XRPUSDT']  # 👉 First testing small batch
+# Constants
+BINANCE_API = 'https://api.binance.com/api/v3/klines'
+SYMBOLS = [
+    'BTCUSDT', 'ETHUSDT', 'BNBUSDT', 'SOLUSDT', 'XRPUSDT', 'DOGEUSDT', 'ADAUSDT', 'AVAXUSDT', 'DOTUSDT', 'TRXUSDT',
+    'LINKUSDT', 'MATICUSDT', 'LTCUSDT', 'BCHUSDT', 'SHIBUSDT', 'ATOMUSDT', 'XLMUSDT', 'ETCUSDT', 'XMRUSDT', 'ICPUSDT',
+    'FILUSDT', 'APTUSDT', 'HBARUSDT', 'NEARUSDT', 'VETUSDT', 'LDOUSDT', 'ARBUSDT', 'QNTUSDT', 'CROUSDT', 'GRTUSDT',
+    'ALGOUSDT', 'AAVEUSDT', 'EGLDUSDT', 'SANDUSDT', 'MANAUSDT', 'THETAUSDT', 'XTZUSDT', 'AXSUSDT', 'IMXUSDT', 'RUNEUSDT',
+    'EOSUSDT', 'KLAYUSDT', 'FLOWUSDT', 'ZECUSDT', 'GALAUSDT', 'SUIUSDT', 'STXUSDT', 'FTMUSDT', 'SNXUSDT', 'BSVUSDT',
+    'CRVUSDT', 'INJUSDT', 'CAKEUSDT', 'COMPUSDT', 'XECUSDT', 'MIOTAUSDT', 'KAVAUSDT', 'DYDXUSDT', 'MINAUSDT', 'WAVESUSDT',
+    'ENJUSDT', '1INCHUSDT', 'BTTCUSDT', 'LRCUSDT', 'GMTUSDT', 'BICOUSDT', 'MASKUSDT', 'YFIUSDT', 'BANDUSDT', 'DASHUSDT',
+    'ZILUSDT', 'ENSUSDT', 'SKLUSDT', 'ROSEUSDT', 'CELRUSDT', 'HOTUSDT', 'ANTUSDT', 'OMGUSDT', 'BALUSDT', 'BLURUSDT',
+    'FETUSDT', 'CKBUSDT', 'GLMRUSDT', 'COTIUSDT', 'RLCUSDT', 'WOOUSDT', 'SFPUSDT', 'XEMUSDT', 'OPUSDT', 'TWTUSDT',
+    'ICXUSDT', 'KSMUSDT', 'OCEANUSDT', 'HNTUSDT', 'STMXUSDT', 'ANKRUSDT', 'ZENUSDT', 'RSRUSDT', 'LSKUSDT', 'PEPEUSDT',
+    'LUNCUSDT', 'TUSDT', 'SSVUSDT', 'FXSUSDT', 'JOEUSDT', 'MAGICUSDT', 'GMXUSDT', 'APTUSDT', 'NKNUSDT', 'ACHUSDT',
+    'IDUSDT', 'JOEUSDT', 'C98USDT', 'DODOUSDT', 'LPTUSDT', 'BNTUSDT', 'API3USDT', 'REEFUSDT', 'NMRUSDT', 'ALICEUSDT',
+    'RAYUSDT', 'DENTUSDT', 'BAKEUSDT', 'FORTHUSDT', 'STGUSDT', 'RADUSDT', 'PERPUSDT', 'MTLUSDT', 'PYRUSDT', 'CTSIUSDT',
+    'SUSHIUSDT', 'VTHOUSDT', 'GLMUSDT', 'VITEUSDT', 'OGNUSDT', 'SPELLUSDT', 'FLMUSDT', 'DARUSDT', 'ILVUSDT', 'PLAUSDT',
+    'LITUSDT', 'QUICKUSDT', 'DEXEUSDT', 'UNFIUSDT', 'POWRUSDT', 'STPTUSDT', 'ONGUSDT', 'BTSUSDT', 'ALPHAUSDT', 'CHRUSDT',
+    'CTKUSDT', 'FIDAUSDT', 'ORNUSDT', 'MDTUSDT', 'XNOUSDT', 'BONDUSDT', 'MLNUSDT', 'XVSUSDT', 'PUNDIXUSDT', 'SYSUSDT',
+    'TRBUSDT', 'UTKUSDT', 'ASTRUSDT', 'MOVRUSDT', 'AUCTIONUSDT', 'PHAUSDT', 'BETAUSDT', 'PSGUSDT', 'CITYUSDT', 'PORTOUSDT',
+    'SANTOSUSDT', 'OGUSDT', 'JUVUSDT', 'ATMUSDT', 'LAZIOUSDT', 'BARUSDT', 'VOXELUSDT', 'HIGHUSDT', 'CTXCUSDT', 'TLMUSDT',
+    'SUPERUSDT', 'POLSUSDT', 'AUDIOUSDT', 'ERNUSDT', 'BICOUSDT', 'HOOKUSDT', 'IDEXUSDT', 'RAREUSDT', 'LEVERUSDT', 'MDXUSDT',
+    'FRONTUSDT', 'QKCUSDT', 'SUNUSDT', 'ACAUSDT', 'RIFUSDT', 'YGGUSDT', 'TRUUSDT', 'ASTUSDT', 'DATAUSDT', 'DEGOUSDT',
+    'MBOXUSDT', 'CELOUSDT', 'DREPUSDT', 'PONDUSDT', 'TROYUSDT', 'FLOKIUSDT', 'KDAUSDT', 'XVGUSDT', 'ALPACAUSDT', 'ADXUSDT',
+    'AMBUSDT', 'BTSUSDT', 'GNOUSDT', 'IRISUSDT', 'MDTUSDT', 'PHBUSDT', 'QIUSDT', 'STMXUSDT', 'TCTUSDT', 'WTCUSDT', 'WINGUSDT',
+    'XVGUSDT', 'YFIIUSDT', 'ZRXUSDT', 'AKROUSDT', 'BUSDUSDT', 'USDCUSDT', 'FDUSDUSDT', 'TUSDUSDT'
+]
 
 INTERVAL = '1h'
 LIMIT = 500
@@ -56,6 +83,7 @@ bot = telegram.Bot(token=TOKEN)
 MAX_RISK_PER_TRADE = 0.01
 ACCOUNT_BALANCE = 1000
 
+# Global Feature List
 feature_list = [
     'Orderblock','MSB','Liquidity_Grab','Breaker','Mitigation','FVG',
     'Equal_High_Low','Int_Ext_Sweep','Session_Smart','MTF_Confirm',
@@ -64,31 +92,20 @@ feature_list = [
     'Corr_Breakout','Gamma_Squeeze','Curve_Skew','Anomaly'
 ]
 
-# -- 🔥 Updated fetch_binance_data() with error handling --
+# Fetch Binance Data
 def fetch_binance_data(symbol, interval, limit):
-    try:
-        params = {'symbol': symbol, 'interval': interval, 'limit': limit}
-        res = requests.get(BINANCE_API, params=params, timeout=10)
-        res.raise_for_status()
-        data = res.json()
-        if not data:
-            st.warning(f"⚠️ Empty data received for {symbol}")
-            return pd.DataFrame()
-        df = pd.DataFrame(data, columns=[
-            'open_time','open','high','low','close','volume',
-            'close_time','quote_asset_volume','trades',
-            'taker_buy_volume','taker_buy_quote_volume','ignore'
-        ])
-        for col in ['open','high','low','close','volume','taker_buy_volume']:
-            df[col] = df[col].astype(float)
-        df['dt'] = pd.to_datetime(df['close_time'], unit='ms')
-        df['session'] = df['dt'].dt.tz_localize('UTC').dt.tz_convert(tz('Asia/Colombo')).dt.hour
-        return df
-    except Exception as e:
-        st.warning(f"⚠️ Failed to fetch {symbol}: {str(e)}")
-        return pd.DataFrame()
+    params = {'symbol': symbol, 'interval': interval, 'limit': limit}
+    data = pd.DataFrame(requests.get(BINANCE_API, params=params).json(),
+                        columns=['open_time','open','high','low','close','volume',
+                                 'close_time','quote_asset_volume','trades',
+                                 'taker_buy_volume','taker_buy_quote_volume','ignore'])
+    for col in ['open','high','low','close','volume','taker_buy_volume']:
+        data[col] = data[col].astype(float)
+    data['dt'] = pd.to_datetime(data['close_time'], unit='ms')
+    data['session'] = data['dt'].dt.tz_localize('UTC').dt.tz_convert(tz('Asia/Colombo')).dt.hour
+    return data
 
-# -- Apply Theories (unchanged) --
+# Apply Theories
 def apply_theories(df):
     df['Orderblock'] = ((df['close']<df['open']) & (df['volume']>df['volume'].rolling(5).mean())).astype(int)
     df['MSB'] = (((df['close']>df['close'].shift(1)) & (df['close'].shift(1)<df['close'].shift(2)))).astype(int)
@@ -124,9 +141,6 @@ def apply_theories(df):
     df['EMA200'] = df['close'].ewm(span=200).mean()
     df['Trend'] = np.where(df['EMA50'] > df['EMA200'], 1, 0)
     return df
-
-# -- Train Model, Scan Signals (unchanged logic) --
-# (same code you posted.)
 
 # Model, Scaler, Trend
 model, scaler, trend_1h = None, None, None
@@ -266,3 +280,4 @@ if st.session_state.get("scan_now") or st.session_state.auto_scan:
     if st.session_state.auto_scan:
         time.sleep(3600)
         st.experimental_rerun()
+      
