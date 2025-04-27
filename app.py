@@ -283,3 +283,18 @@ if st.session_state.get("scan_now") or st.session_state.auto_scan:
     if st.session_state.auto_scan:
         time.sleep(3600)
         st.experimental_rerun()
+
+# Safe Initialize Streamlit session states
+if "auto_scan" not in st.session_state:
+    st.session_state.auto_scan = False
+if "scan_now" not in st.session_state:
+    st.session_state.scan_now = False
+
+# Now we can safely check session states
+if st.session_state.get("scan_now") or st.session_state.get("auto_scan"):
+    scan_signals()
+    st.session_state.scan_now = False
+    if st.session_state.auto_scan:
+        time.sleep(3600)
+        st.experimental_rerun()
+
