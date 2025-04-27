@@ -44,7 +44,7 @@ if col2.button('🔁 Toggle Auto Scan'):
     st.success(f"Auto Scan is now {'ON' if st.session_state.auto_scan else 'OFF'}")
 
 # -- Constants (unchanged except smaller SYMBOLS) --
-BINANCE_API = 'https://api.binance.com/api/v3/klines'
+BINANCE_API = 'https://api.binance.us'
 
 SYMBOLS = ['BTCUSDT', 'ETHUSDT', 'BNBUSDT', 'SOLUSDT', 'XRPUSDT']  # 👉 First testing small batch
 
